@@ -1,0 +1,33 @@
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        sublist = []
+        lenlist = []
+        for i in s:
+            #先分两种情况：1.不在list，2.在list
+            if i not in sublist:
+                sublist.append (str(i))
+                curr_max = len(sublist)
+                lenlist.append(curr_max)
+            elif i in sublist:
+                #在list再分两种情况：1.在list最后一位. 2.在list中的某一位除了最后一位的某一位
+                if i == sublist[-1]:
+                    curr_max = len(sublist)
+                    lenlist.append(curr_max)
+                    sublist = []
+                    sublist.append(str(i))
+                else:
+                #在某一位的情况就要重新index整个list
+                    sublist=sublist[sublist.index(i)+1:]
+                    sublist.append(str(i))
+                    curr_max = len(sublist)
+                    lenlist.append(curr_max)
+        #检查长度list是否为空
+        if len(lenlist) == 0:
+            return 0
+        else:
+            return max(lenlist)
+        

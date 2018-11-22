@@ -1,0 +1,38 @@
+class Solution(object):
+    def addTwoNumbers(self, l1, l2):
+        """
+        :type l1: ListNode
+        :type l2: ListNode
+        :rtype: ListNode
+        """
+        ans = ListNode(0)
+        tmp = ans
+        c = 0
+        
+        while True:
+            #创建tmpans的目的是用tmpans来代替每个对位相加的和以及进位的情况。
+            tmpans = 0+c
+            #此处注意不必把l1和l2同时考虑在一个if语句中，因为两个LinkList可能有不同的长度，所以分别考虑每个nodes即可。
+            if l1 != None:
+                tmpans += l1.val
+                l1 = l1.next
+            if l2 != None:
+                tmpans += l2.val
+                l2 = l2.next
+            #注意这里先取余计算对位数字，再判断是否有进位。
+            tmp.val = tmpans % 10
+            if tmpans >= 10:
+                c = 1
+            elif tmpans < 10:
+                c = 0
+            if l1 == None and l2 == None and c == 0:
+                    break
+            #对最后返回的ListNode的赋值在最后，只有当l1和l2同时没有下一位，同时没有进位的时候才停止loop
+            tmp.next = ListNode(0)
+            tmp = tmp.next
+        return ans
+        
+            
+            
+            
+        

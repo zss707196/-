@@ -1,0 +1,15 @@
+class Solution(object):
+    def findMedianSortedArrays(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: float
+        """
+        total_list = nums1+nums2
+        total_list.sort()
+        if len(total_list) % 2 == 0:
+        #唯一要注意的就是这里在求除法的时候如果直接"/2"的话返回的值是不带小数点的，默认是正数除法，写成2.0才是浮点数除法，返回浮点数
+            return (total_list[len(total_list)/2-1]+total_list[len(total_list)/2])/2.0
+        
+        if len(total_list) % 2 == 1:
+            return total_list[len(total_list)//2]

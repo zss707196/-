@@ -55,15 +55,17 @@ class Solution(object):
             for j in range (1, len(s)):
                     #先对之前的s整形,因为开始遍历以后每次都会对原str添加特殊字符
                     s = s.replace('$','')
-                    #
+                    #同样和之前相同，为了避免从特殊字符向两端展开的时候右侧index超出str长度，用min()解决，这里不用-1是因为之前j的范围到len(s)
                     idx = min(len(s)-j, j)
+                    #随着遍历j的增加，每次遍历在j的位置添加特殊字符用来检查关于空格对称的情况
                     s = s[:j]+"$"+s[j:]
-
+                    #在特殊字符位像左右展开检查是否相等
                     for i in range(1, idx+1):
                         if s[j-i]==s[j+i]:
+                            #只有在新的substring比之前的要长的时候才更新substring
                             if len(s[j-i:j+i+1])>len(substring):
                                 substring=s[j-i:j+i+1]
-                    
+                        #如果不同就直接停止
                         elif s[j-i] != s[j+i]:
                             substring = substring
                             break

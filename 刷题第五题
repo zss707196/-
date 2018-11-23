@@ -1,0 +1,72 @@
+class Solution(object):
+    #除了主函数之外写了另一个函数，EvenOdd
+    def longestPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: str
+        manacher algorithm(但是这里不是用的manacher algorithm）
+        """
+        #同样，主程序要先判断是不是输入了空字符或者没有输入
+        if len(s) == 0 or s == " ":
+            return s
+        else:
+        #调用EvenOdd函数两次来得到两个不同的结果
+        #两次调用一次是对原字符找最长回文，一次是在字符间插入$
+        #要注意整个回文可以根据某字符对称，也可以根据字符间空格对称
+        #比如aba是回文根据b对称，abba同样是回文，根据字符间空格对称
+        #所以，对于长度为n的字符串，一共有2n-1个对称位置
+            odd = self.EvenOdd (s, False)
+            even =self.EvenOdd (s, True)
+        #返回找到最长的回文
+            if len(odd)>len(even):
+                return odd
+            else:
+                return even
+    #EvenOdd函数，对输入的字符串进行两种操作：1).保留原字符, 2).对原两字符之间的空隙插入特殊字符$        
+    def EvenOdd (self, s, Filling):
+        #不插入特殊字符$
+        if not Filling:
+            #默认初始值是字符串的第一个字母
+            substring = s[0]
+            #因为以字符为对称点，所以遍历的idx从1开始到倒数第二位结束
+            for j in range (1, len(s)-1):
+                #因为要以对称点为中心向两边展开，所以需要考虑idx超出范围的情况。
+                #当j遍历到总长一半之后的位置时像左展开的位置会大于向右展开的位数
+                #所以，这里用min（）函数返回 var:idx，保证idx值始终不会超过string总长一半-1
+                idx = min(len(s)-1-j, j)
+                #当对称中心移动到一点后，开始向左右展开，依次看左右的i位是否相等
+                for i in range(1, idx+1):
+                    if s[j-i]==s[j+i]:
+                        #如果左右第i位相等，看从左第i位到右第i位的len是否比之前回文长度长
+                        if len(s[j-i:j+i+1])>len(substring):
+                            substring=s[j-i:j+i+1]
+                        else:
+                            substring=substring
+                        #elif 
+                    #如果左i位和右i位不相等则不用继续loop，因为已经不满足回文条件
+                    elif s[j-i] != s[j+i]:
+                        substring = substring
+                        break
+                        
+            return substring
+        if Filling:
+            substring = s[0]
+            #因为插入特殊字符是在空隙内插入并且插入的特殊字符会有idx j，所以j的遍历从1开始到len(s)结束
+            for j in range (1, len(s)):
+                    #先对之前的s整形,因为开始遍历以后每次都会对原str添加特殊字符
+                    s = s.replace('$','')
+                    #
+                    idx = min(len(s)-j, j)
+                    s = s[:j]+"$"+s[j:]
+
+                    for i in range(1, idx+1):
+                        if s[j-i]==s[j+i]:
+                            if len(s[j-i:j+i+1])>len(substring):
+                                substring=s[j-i:j+i+1]
+                    
+                        elif s[j-i] != s[j+i]:
+                            substring = substring
+                            break
+                            
+            return substring.replace('$','')
+            

@@ -32,19 +32,24 @@ class Solution(object):
                         #如果超出len范围则什么都不做，维持原样
                         else:
                             None
-                #
+                #接下来考虑最后一行，先考虑第一和最后一行因为他们的idx algorithm比较简单
                 elif i == numRows - 1:
+                    #同样需要考虑迭代j多少次的问题
                     for j in range (int(len(s)/float(numRows)+0.5)):
+                        #最后一行的idx-algorithm是 j*(2n-2)+n-1
                         idx = j*(2*numRows-2)+numRows-1
+                        #考虑idx out of range的问题
                         if idx <= len(s)-1:
                             str_ += s[idx]
                         else:
                             None
                 else:
                     for j in range (int(len(s)/float(numRows)+0.5)):
-                    
+                    #需要注意的是中间行，因为中间行的每一行需要两个不同的idx-algorithm
+                        #对于第i行第j位的两个idx分别是：j*(2n-2)+i和(j+1)*(2n-2)-i
                         idx0 = j*(2*numRows-2) + i
                         idx1 = (j+1)*(2*numRows-2) - i
+                        #判断idx out of range的问题，并且赋值·
                         if idx0 <= len(s)-1:
                             str_ += s[idx0]
                         if idx1 <= len(s)-1:

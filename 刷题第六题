@@ -1,0 +1,51 @@
+将一串字符转成一个n行的zigzag的字符然后再把n行合并在一起。
+PAYPALISHIRING ==> PAHNAPLSIIGYIR
+P   A   H   N
+A P L S I I G
+Y   I   R
+class Solution(object):
+    def convert(self, s, numRows):
+        """
+        :type s: str
+        :type numRows: int
+        :rtype: str
+        """
+        
+        str_=""
+        #首先要判断是不是要把所有字符放在一行或者行数大于字符长度。如果满足这个条件就可以直接返回输入，因为一行就可以表示所有的输入字符
+        if len(s)/numRows == 0 or numRows == 1:
+            return s
+        else:
+        #不满足就要判断一共要分成多少行，每一行都有自己的idx-algorithm来从字符串中选择正确的位置的字符来分别组成每一行。
+            for i in range(numRows):
+                #接下来就判断第一行的时候
+                if i == 0:
+                    #在每一行中实施idx选取algorithm的时候也需要一个依次增长的数来移动idx。
+                    #如果len(S)/numRows四舍，意味着不需要多迭代j一次；如果五入，就需要j多迭代一次来考虑到最后一列的字符。
+                    #所以用float(numRows)来得到浮点数除法，int(XXX+0.5)来满足四舍五入并且得到整数，满足range()的条件
+                    for j in range (int(len(s)/float(numRows)+0.5)):
+                        #第一行的idx-akgorithm是 j*(2n-2)
+                        idx = j*(2*numRows-2)
+                        if idx <= len(s)-1:
+                            str_ += s[idx]
+                        else:
+                            None
+                elif i == numRows - 1:
+                    for j in range (int(len(s)/float(numRows)+0.5)):
+                        idx = j*(2*numRows-2)+numRows-1
+                        if idx <= len(s)-1:
+                            str_ += s[idx]
+                        else:
+                            None
+                else:
+                    for j in range (int(len(s)/float(numRows)+0.5)):
+                    
+                        idx0 = j*(2*numRows-2) + i
+                        idx1 = (j+1)*(2*numRows-2) - i
+                        if idx0 <= len(s)-1:
+                            str_ += s[idx0]
+                        if idx1 <= len(s)-1:
+                            str_ += s[idx1]
+                        else:
+                            None
+            return str_

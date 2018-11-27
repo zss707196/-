@@ -26,10 +26,13 @@ class Solution(object):
                     for j in range (int(len(s)/float(numRows)+0.5)):
                         #第一行的idx-akgorithm是 j*(2n-2)
                         idx = j*(2*numRows-2)
+                        #同时需要考虑得到的idx out of range的问题，idx必须要比字符长度小才append到变量str_
                         if idx <= len(s)-1:
                             str_ += s[idx]
+                        #如果超出len范围则什么都不做，维持原样
                         else:
                             None
+                #
                 elif i == numRows - 1:
                     for j in range (int(len(s)/float(numRows)+0.5)):
                         idx = j*(2*numRows-2)+numRows-1

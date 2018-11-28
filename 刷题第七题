@@ -1,0 +1,75 @@
+求一个整数的倒序整数：123==>321。输出的最大range是[-2^31, 2^31-1]这个range很关键
+#两种求法：一种数学方法，一种转换成list的求法。
+数学求法：
+class Solution(object):
+    def reverse(self, x):
+        """
+        :type x: int(e.g：123）
+        :rtype: int
+        """
+        #定义一个倒序整数作为最后输出
+        rev = 0
+        #当x！=0时一直运行
+        while x!= 0:
+            #x=123,12,1
+            #定义一个中间临时值
+            #trunc=x/10求整，trunc的值永远都是第n次迭代后去掉个位后的值。
+            trunc=int(float(x)/10)
+            #trunc=12,1,0
+            #用x减去取整的临时值与10的积得出取余的值，这么做而不是直接用pop取余的原因是python的pop函数总是返回正数，如果输入x为负就没办法正常工作
+            pop=x-trunc*10
+            #pop=3,2,1
+            #如果输入x为正，先判断这个被赋值之前的rev(rev*)的值是否有可能超出最大range，如果rev*已经超出maxint/10那就不用对rev*进行迭代更新值因为肯定会超出range；
+            #如果rev*恰好等于maxint/10，那么就要判断pop是否为8或者更大，(2^31个位是8)。要判断pop是因为rev=(rev*)*10+pop。
+            if rev > (2**31)/10 or (rev == (2**31)/10 and pop > 7):
+                return 0
+            #如果输入x为负，最大range的判断就要变成：rev*是否小于minint/10，或者rev*=minint/10,同时pop小于-8。如果满足就直接返回0
+            elif rev < float((-2**31))/10 or (rev == int(float((-2**31))/10) and pop < -8):
+                
+                return 0
+            #对rev更新值，pop就是个位，同时把rev*乘十把值向十位方向挪一位
+            rev = rev*10+pop
+            #rev=3,32,321
+            x = trunc
+            #x=12,1,0
+        return rev 
+        
+        ###################################################################################################################################
+        
+        #另一种求法就是整数转字符转list再转回整数
+        class Solution(object):
+    def reverse(self, x):
+        """
+        :type x: int
+        :rtype: int
+        """
+        
+        string=[]
+        
+        if  x ==0:
+            return 0
+        else:
+            if x > 0:
+            #如果输入大于0就定义一个空字符和一个空list
+            #在list中用insert的方式永远在第一位插入str的每个元素
+            #最后用join（）函数把空字符和整个list合并成一个完整的字符串
+                rev=""
+                for i in range(len(str(x))):
+                    string.insert(0,str(x)[i])
+                rev=rev.join(string)
+                #考虑是否超出范围
+                if int(rev) >= 2**31:
+                    return 0
+                else:
+                    return int(rev)
+                
+            elif x < 0:
+                rev="-"
+                #为负的时候唯一改变的就是不再定义一个空字符而是定义一个负号字符“-”
+                for i in range(1,len(str(x))):
+                    string.insert(0,str(x)[i])
+                rev+="".join(string)
+                if  int(rev) <= -2**31:
+                    return 0
+                else:
+                    return int(rev)

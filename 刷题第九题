@@ -1,0 +1,29 @@
+#判断一个整数是不是回文整数。简单
+  class Solution(object):
+    def isPalindrome(self, x):
+        """
+        :type x: int
+        :rtype: bool
+        """
+        x_=x
+        #先判断是不是小于0，负数回文会是数字负号，所以不可能是回文数
+        if x < 0:
+            return False
+        else:
+        #如果不是，就像第五题一样求倒序
+            rev=0
+            while x != 0:
+                #不用考虑为负的情况，直接求余
+                pop = x%10
+                #向十位方向移动
+                tmp = x/10
+                #把取余后的结果向十位方向移动
+                rev = rev*10+pop
+                #更新x向个位方向移动
+                x = tmp
+        #如果倒序和正序相同返回true
+        if x_ == rev:
+            return True
+        #否则返回false
+        else:
+            return False

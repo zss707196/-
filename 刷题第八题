@@ -1,0 +1,56 @@
+#提取任意一串以数字为开头的字符串中的数字。忽略开头任意长的空格。
+#如果出现过数字的话之后出现的非数字都不考虑同时停止。
+#这个写的不好，逻辑其实并不是很复杂，但是没有把几个条件合并在一起
+class Solution(object):
+    def myAtoi(self, str):
+        """
+        :type str: str
+        :rtype: int
+        """
+        string =[]
+        num = ["0","1","2","3","4","5","6","7","8","9"]
+        math = ["+","-","."]
+        i = 0
+        stat = 0
+        int_=""
+        #遍历整个string
+        while i < len(str):
+            #看第一个字符是不是数字
+            if str[0] not in num:
+            #如果不是数字，看第i位是不是空格或者 . + -, 如果第i位为第一位且为特殊数学字符，那就存下来，同时assign stat到1.
+                if str[i] == " "and stat != 1:
+                    i+=1
+                elif str[i] in math and stat != 1:
+                    string.append(str[i])
+                    stat = 1
+                    i+=1
+                #如果第i位为数字，就开始append数字并且把stat设置成1，出现数字之后再出现其他字符都会直接停止
+                elif str[i] in num:
+                    string.append(str[i])
+                    stat = 1
+                    i+=1
+                else:
+                    break
+            #如果从第一位开始就是数字的话只要出现不是数字的就停止，只要是数字就append
+            elif str[0] in num:
+                if str[i] not in num:
+                    break
+                else:
+                    string.append(str[i])
+                    i+=1
+            
+        #如果string这个list的长度是0，直接return 0
+        if len(string)==0:
+            return 0
+        #长度是1的时候需要特别检查这个string是不是只有特殊字符，如果只有特殊字符那也就直接返回0
+        elif len(string)==1 and int_.join(string) not in num:
+            return 0
+        #长度大于一就看是不是超过了数字range，返回适当的int
+        else:
+            int_=int(float(int_.join(string)))
+            if 2**31-1<=int_:
+                return 2**31-1
+            elif int_<=-2**31:
+                return -2**31
+            else:
+                return int_

@@ -1,0 +1,27 @@
+这题是求一串数字，整个list这些数字中能围成的最大面积是多少。
+#算法的思路是从整个list的最两端开始依次向中间靠拢（就是从求面积’宽‘最大的地方开始求）如果左边大于右边就固定左边右边向中间移动，反之固定右边，左边向中间移动
+class Solution(object):
+    def maxArea(self, h):
+        """
+        :type height: List[int]
+        :rtype: int
+        """
+        #整体思路是先写出左右两个数值的idx作为两个pointer，初始值分别从最左和最右开始，同时定义最大面积为0
+        ridx = len(h)-1
+        lidx = 0
+        max_area = 0
+        #只要ridx和lidx的差值大于等于一时就一直循环，等于0前停止
+        while ridx - lidx >= 1:
+                #如果左侧idx的值大于右侧，固定左侧移动右侧，面积就是当前最大的max_area值
+                if h[lidx] > h[ridx]:
+                    #面积求法就是左右两个idx的差值乘上右侧idx的值，因为已经满足条件左侧值大于右侧值，所以肯定是右侧值较小
+                    max_area = max(max_area, (ridx-lidx)*h[ridx])
+                    #固定左侧值，右侧idx减一，向左移动一位
+                    ridx -= 1
+                #当左右两侧相等（这时无论移动那一位都可以）或右侧大于左侧的时候固定右侧移动左侧
+                else:
+                    #最大面积求法相等，只是较小值编程左侧值
+                    max_area = max(max_area, (ridx-lidx)*h[lidx])
+                    左侧idx值向右移动一位
+                    lidx += 1
+        return max_area

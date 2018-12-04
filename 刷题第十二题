@@ -1,0 +1,46 @@
+此题将一个整数转换成它的罗马数字表达形式， 输入数字小于3999
+Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+
+class Solution(object):
+    def intToRoman(self, num):
+        """
+        :type num: int
+        :rtype: str
+        """
+        #首先创建一个list array，这个list里面包含了每一位分别可能出现的数字，先1后5
+        list_=[["I","V"],["X","L"],["C","D"],["M"]]
+        #创建一个str作为最后输出
+        str_=""
+        #输入转成str
+        n=str(num)
+        #创建一个idx变量用来从list array里面选择正确位置的罗马字符对应正确的位数
+        idx=len(n)-1
+        #for loop重复位数长度次，用i配合idx来一起从list array中选取字符
+        for i in range (idx+1):
+            #求对5和对10的取余结果，这么求是因为罗马数字以5和10为分界,如果当前位数数字小于5那么pop5和pop10相等，反之则不相等
+            pop5 = int(n[i])%5
+            pop10 = int(n[i])%10
+            #如果pop5和pop10相等则要判断数字是否是4如果是4的话表达方式是当前位罗马一➕当前位罗马五
+            if pop5 == pop10:
+                if pop5 ==4:
+                    #这里idx-i来选取当前第位对应的罗马数字组合（e.g:对于两位数字i=0,对应十位，idx-i=1，从list中取X和L； i=1, idx-i=0 ，对应个位，从list中取I和V
+                    #pop5等于4的时候先取当前位罗马一，再去当前位罗马五
+                    str_+=list_[idx-i][0]+list_[idx-i][1]
+                else:
+                    #若不等于4就直接重复当前位罗马一pop5次
+                    str_+=list_[idx-i][0]*pop5
+            else:
+                #如果pop5和
+                if pop5 ==4:
+                    str_+=list_[idx-i][0]+list_[idx-i+1][0]
+                else:
+                    str_+=list_[idx-i][1]+list_[idx-i][0]*pop5
+        
+        return str_

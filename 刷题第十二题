@@ -37,10 +37,13 @@ class Solution(object):
                     #若不等于4就直接重复当前位罗马一pop5次
                     str_+=list_[idx-i][0]*pop5
             else:
-                #如果pop5和
+                #如果pop5和pop10不同，证明当前位的数字大于5
                 if pop5 ==4:
+                    #大于5则需要考虑当前位是不是9，如果是9的话表达方式是当前位罗马一➕进一位罗马一（罗马十）
+                    #这要注意如果当前位是9，需要当前位罗马一（idx-i)[0]和下一位罗马一（idx-i+1)[0]
                     str_+=list_[idx-i][0]+list_[idx-i+1][0]
                 else:
+                    #除此之外当前位就是当前位罗马五+当前位罗马一*pop5
                     str_+=list_[idx-i][1]+list_[idx-i][0]*pop5
-        
+        #返回str_
         return str_

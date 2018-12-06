@@ -48,9 +48,12 @@ class Solution(object):
         #选取strs中第一个元素即长度最短的元素，这样可以很大程度上简化二分的难度
         prefix = strs[0]
         #其实这个对于strs list第一个元素长度为一的判断是不是可以省略放在while loop里面检查？
-        #
+        #如果第一个元素长度为1
         if len(prefix) == 1:
+        #调用intheothers函数，判断这个唯一的元素是否是strs list中其他元素的开头
+        #因为只有一位，所以直接判断是不是其他元素的开头即可，不用其他的逻辑来选择适当的idx
             if self.intheothers(prefix, strs):
+                #如果是的话，因为prefix只有一位，直接返回他自己就行
                 return prefix
             else:
                 return str_

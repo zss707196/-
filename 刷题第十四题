@@ -55,26 +55,52 @@ class Solution(object):
             if self.intheothers(prefix, strs):
                 #如果是的话，因为prefix只有一位，直接返回他自己就行
                 return prefix
+                #如果不是的话返回str_，其实也就是返回“”，因为str_还没有被赋值
             else:
                 return str_
+        #其他情况，prefix（list第一位）长度不为1，也不为空
         else:
+            #创建变量 idx 来指明二分的起始点，最先的起始点是prefix长度一半的位置
             idx=len(prefix)/2
+            #只要指明二分点的idx不超过整个prefix的最后一位就可以一直分下去
             while idx<=len(strs[0]):
+                #把prefix分成左右两个部分
                 lh = prefix[:idx]
                 rh = prefix[idx:]
-            
+                
                 if self.intheothers(lh, strs):
                     str_ = lh
+                #检查左半边是不是prefix
+                if self.intheothers(lh, strs):
+                #如果是，那左半边就赋值给str_
+                    str_ = lh
+                    #这个if是用来判断是否idx到了prefix的倒数第二位，如果是的话idx就不能再挪(len(prefix)-idx)/2位了，这样会返回0
+                    if len(prefix)-idx <= 1:
+                        #idx只挪一位，挪到最后一位
+                        idx+=1
+                        #改变lh值
+                        lh = prefix[:idx]
+                        #因为这时候已经到了prefix的最后一位，所以lh就应该等于prefix，只要这时lh是strs剩下元素的前缀，就赋值str_并返回
+                        #这里多做一个这样的判断是因为不光要考虑lh是前缀的情况，还要考虑lh不是前缀，整个idx向左挪而不是向右挪的情况，这样保证
+                        #当前缀在初次分开后的左半边的时候不会卡在while loop中出不来
+                        if self.intheothers(lh, strs):
+                            str_ = lh
+                            return str_
+                    #若不是prefix倒数第二位就移动(len(prefix)-idx)/2位
+                    else:
+                        idx+=(len(prefix)-idx)/2
+                #如果lh不是strs中剩下的元素的前缀，就要对lh继续重新对半分，这样把lh值赋值给prefix，改变prefix重新返回while loop 迭代
+                #但是要注意在重新分割后的prefix中右半边有字母不是前缀的情况，这样就需要进入之前的嵌套的if语句中返回值
                 else:
-                    None
-                if len(prefix)-idx <= 1:
-                    idx+=1
-                else:
-                    idx+=(len(prefix)-idx)/2
+                #赋值，并把idx变为prefix长度一半
+                    prefix = lh
+                    idx=len(prefix)/2
+                
             return str_
         
     def intheothers(self, sub, strs):
             lis=[]
+            #intheothers函数就用来检查当前lh是不是strs list中其他元素的开头，只有都是才返回True
             for i in range(1,len(strs)):
                 if strs[i].startswith(sub):
                     lis.append(True)

@@ -1,0 +1,74 @@
+class Solution(object):
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        '''
+        nums.sort()
+        N, result = len(nums), []
+        for i in range(N):
+            if i > 0 and nums[i] == nums[i-1]:
+                continue
+            target = nums[i]*-1
+            s,e = i+1, N-1
+            while s<e:
+                if nums[s]+nums[e] == target:
+                    result.append([nums[i], nums[s], nums[e]])
+                    s = s+1
+                    while s<e and nums[s] == nums[s-1]:
+                        s = s+1
+                elif nums[s] + nums[e] < target:
+                    s = s+1
+                else:
+                    e = e-1
+        return result
+        '''
+####################################################################################################################################
+这个题是求一个list中任意独特的相加和为0的三个数，可以是三个0.
+我自己的想法是把list分成负数部分，0，和整数部分，事实证明这样可行，但是非常笨，因为要考虑多种情况：首先是0的个数的问题，然后是需要对负数和正数两个部分
+分别求任意两个数的和并在另一个里面找是否有等于两数和负值的数。而且当判断和为零的三个数是否出现的时候要把这三个数和整个list中的所有三数list依次比较，
+非常非常蠢。应该在开始相加的时候就排除掉可能重复的数值这样后面就不用再把list进行比较
+#这里的求法比较好的是依次把整个list中的每一个数当做target（直接取负）然后指定两个pointer从剩下的list中的两端开始依次向中间移动，直到这两个pointer相遇才停止
+#这样保证对于每一个target，所有可能的组合都被考虑了。
+
+#这样做要先对nums这个list排序，这样做是为了正确的移动左右两个pointer。因为target是最左侧数字取负，所以如果左右两个pointer值相加小于target，证明要增大
+#左侧idx值，来得到一个更大的和，如果大于target证明和超过了，这样就要把右侧idx向左挪因为左侧idx的值肯定比右侧idx值小。
+        nums.sort()
+        res=[]
+        if len(nums)<3:
+            return res
+        else:
+                    N=len(nums)
+                    for i in range (N):
+                        #大方面i不能和前个i重复，因为i表示的是求和的数（也就是说一次性要返回所有和为i的组合，不能返回一个就停止）
+                        #如果i>0而且当前i和前一位i相等，则出现重复检查的target，这样就跳过这个数
+                        if i>0 and nums[i-1] == nums[i]:
+                            continue
+                        #这里给targ赋值-nums[i]：这样依次用-nums[i]赋值的好处就是永远都只用从一边向另一边搜索，而且最后肯定会停止在0或者最小正数的位置
+                        targ = -nums[i]
+                        #左侧idx为targ的下一位数值
+                        idx = i+1
+                        #右侧r_idx是整个list最右侧的数值
+                        r_idx = N-1
+                        #对于一个i要找出所有可能的求和组合，所以一直首尾求和直到除i外全部元素都两两求过和为止
+                        #只要左侧的idx比右侧r_idx小，还没有检索完整个list，就继续
+                        while idx < r_idx:
+                            #当左侧idx值和右侧r_idx值的和等于targ的时候就在res这个list中append 整个list result
+                            if nums[idx]+nums[r_idx]==targ:
+                                res.append([nums[i],nums[idx],nums[r_idx]])
+                                同时左侧idx加一向右挪一位
+                                idx+=1
+                                #小方面每次idx都挪一位，挪完后的值若和之前值一样就得继续挪
+                                #只要左右两个idx和r_idx还没相遇，且idx-1和idx的值一样，就得继续挪，排除重复考虑的情况
+                                #这个loop写在 nums[idx]+nums[r_idx]==targ的条件里面是因为要避免对已经找到的符合条件的i再重复idx
+                                #比如i是4已经找到idx=1，r_idx=3，如果idx+1也是1这样就避免再找到idx=1这种情况
+                                while idx<r_idx and nums[idx-1]==nums[idx]:
+                                    idx+=1
+                            #如果两数的和小于targ，就把左侧idx向右挪，增大他
+                            elif nums[idx]+nums[r_idx]<targ:
+                                idx+=1
+                            #如果两数的和大于targ，就把右侧r_idx向左挪，减小
+                            else:
+                                r_idx-=1
+                    return res

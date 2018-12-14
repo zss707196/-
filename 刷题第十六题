@@ -1,0 +1,60 @@
+这题和十五题相似，相当于是把十五题的找寻三个数字的和为指定值转换成了和为最接近指定值。
+关键在于两点：
+1.一定要对list进行排序，这样才能正确的移动idx和r_idx的位置
+2.看似和15题不一样，但其实还是2pointer问题，只不过是吧两个比较的值从target和nums[idx]+nums[r_idx]比较变成了target和nums[i]+nums[idx]+nums[r_idx]
+class Solution(object):
+    def threeSumClosest(self, nums, target):
+        """
+        :type nums: List[int]
+        :type target: int
+        :rtype: int
+        """
+        #先排序
+        nums.sort()
+        closet = 0
+        #这里很重要，因为要比较最接近于target的和，所以每次都需要比较当前sum和target之间的差距和前面一次的差距
+        prev_diff=2**32-1
+        if len(nums)<3:
+            return 0
+        else:
+            for i in range (len(nums)):
+            #和15题一样，先要检查是否会出现大层面重复的情况，就是i不被重复考虑，如果重复就跳过
+                if i>0 and nums[i]==nums[i-1]:
+                    continue
+                #左侧idx是i右边一位
+                idx = i+1
+                #右侧r_idx是最右边的值
+                r_idx=len(nums)-1
+                #只要左边idx没有超过右边r_idx
+                while idx < r_idx:
+                    #先求三位数的和
+                    threesum = nums[i]+nums[idx]+nums[r_idx]
+                    #得出三位数sum和target之间差的绝对值，用来找出最接近target的和
+                    Adiff = abs(threesum-target)
+                    #三位数和target之间的差，如果小于0，证明左侧值需要向右挪，如果大于0，右侧值需要向左挪
+                    diff = threesum-target
+                    #这里和15题不同，需要额外一步，如果当前Adiff比前位Adiff小，证明找到了更接近于target的三位和，重新赋值prev_diff为更小的Adiff
+                    
+                    if Adiff<prev_diff:
+                        prev_diff = Adiff
+                        closet = threesum
+                    #之后只需要按需要移动idx和r_idx即可
+                    #只需要移动即可，不需要考虑赋值的情况，因为只有在当前Adiff小于prev_diff，才会对closet赋值。
+                    if diff == 0:
+                        return closet
+                    #如果diff<0就将idx向右挪，同时需要考虑idx移动后不会出现重复的情况
+                    elif diff < 0:
+                            idx+=1
+                            while idx<r_idx and nums[idx]==nums[idx-1]:
+                                idx+=1
+                    #如果diff>0就将r_idx向右挪，同时需要考虑r_idx移动后不会出现重复的情况
+                    elif diff > 0:
+                            r_idx-=1
+                            while idx<r_idx and nums[r_idx]==nums[r_idx+1]:
+                                r_idx-=1
+                        
+            return closet
+                            
+                
+                
+                
